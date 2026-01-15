@@ -11,13 +11,14 @@ def emotion_detector(text_to_analyze):
 
     response = requests.post(url, json=myobj, headers=header)
     formatted_response = json.loads(response.text)
-    max_value = None        emotions = prediction['emotion']
+    max_value = None
+    
+    for prediction in formatted_response['emotionPredictions']:
+        emotions = prediction['emotion']
         for emotion, score in emotions.items():
             if max_value is None or score > max_value:
                 max_value = score
                 dominant_emotion = emotion
-
-
         anger_score = emotions['anger']
         disgust_score = emotions['disgust']
         fear_score = emotions['fear']
