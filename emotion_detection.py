@@ -11,45 +11,25 @@ def emotion_detector(text_to_analyze):
 
     response = requests.post(url, json=myobj, headers=header)
     formatted_response = json.loads(response.text)
-    max_value = None
     
-    for prediction in formatted_response['emotionPredictions']:
-        emotions = prediction['emotion']
-        for emotion, score in emotions.items():
-            if max_value is None or score > max_value:
-                max_value = score
-                dominant_emotion = emotion
-        anger_score = emotions['anger']
-        disgust_score = emotions['disgust']
-        fear_score = emotions['fear']
-        joy_score = emotions['joy']
-        sadness_score = emotions['sadness']
-        break
+    '''
+    Extract the dictionary of emotions and scores from the response.
+    Loop through emotions, determine which one has the highest score,
+    record this as dominant. 
+    Add emotion and score to output dictionary.
+    '''
+    prediction = formatted_response['emotionPredictions'][0] # Get first item 
+    emotions = prediction['emotion'] # Get dictionary of emotions and scores
+    emotional_response = {} # Instantiate dictionary to be returned
+    max_score = None # Set score for dominant emotion to None
     
-    emotional_response = {
-        'anger': anger_score,
-        'disgust': disgust_score,
-        'fear': fear_score,
-        'joy': joy_score,
-        'sadness': sadness_score,
-        'dominant_emotion': dominant_emotion
-    }        
+    for emotion, score in emotions.items():
+        if max_score is None or score > max_score: 
+            max_score = score # record score as highest encountered so far
+            dominant_emotion = emotion # record emotion as most dominant encountered so far
+        emotional_response[emotion] = score # Add emotion and score to output dictionary
     
-    emotional_response = {}
+    # Add dominant emotion to output dictionary
+    emotional_response["dominant_emotion"] = dominant_emotion 
     
-    for prediction in formatted_response['emotionPredictions']:
-        emotions = prediction['emotion']
-        for emotion, score in emotions.items():
-            if max_score is None or score > max_score:
-                max_score = score
-                dominant_emotion = emotion
-            emotional_response[emotion] = score
-        break
-    
-    emotional_response["dominant_emotion"] = dominant_emotion
-
-   # anger = formatted_response['emotionPredictions'][0]['emotion']['anger']
-   # disgust = formatted_response['emotionPredictions'][0]['emotion']['disgust']
-
-
     return emotional_response
