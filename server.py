@@ -17,4 +17,21 @@ def sent_detector():
         function. The output shows the score for each emotion detected
         and the "dominant" emotion with the highest score.
     '''
+    text_to_analyze = request.args.get('textToAnalyze')
+    response = emotion_detector(text_to_analyze)
 
+    return response
+    
+@app.route("/")
+def render_index_page():
+    ''' This function initiates the rendering of the main application
+        page over the Flask channel
+    '''
+    # DONE
+    return render_template('index.html')
+
+if __name__ == "__main__":
+    ''' This functions executes the flask app and deploys it on localhost:5000
+    '''
+    # DONE
+    app.run(host="0.0.0.0", port=5000)
