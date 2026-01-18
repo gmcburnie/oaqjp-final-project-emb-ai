@@ -19,7 +19,12 @@ def sent_detector():
     '''
     text_to_analyze = request.args.get('textToAnalyze')
     res = emotion_detector(text_to_analyze)
+    
+    # Error handling, bad request
+    if res['dominant_emotion'] == None:
+        return ('Invalid text! Please try again!')
 
+    # Return response with emotion scores
     return (
             "For the given statement, the system response is "
             f"'anger': {res['anger']}, 'disgust': {res['disgust']}, "
